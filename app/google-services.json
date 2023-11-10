@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "719989503852",
+    "project_id": "informationaboutbrands",
+    "storage_bucket": "informationaboutbrands.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:719989503852:android:73c56edf7e9c80c8c1e549",
+        "android_client_info": {
+          "package_name": "com.myu.informationaboutbrands"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA008Cxv0RrNYtArbn4YN51kwUfQ4Q1TGw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
