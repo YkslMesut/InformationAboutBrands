@@ -1,11 +1,13 @@
 package com.myu.informationaboutbrands.ui.home
 
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.myu.informationaboutbrands.R
 import com.myu.informationaboutbrands.adapter.ProductAdapter
@@ -37,13 +39,13 @@ class ProductsFragment : BaseFragment<FragmentProductsBinding>() {
         initViews()
         setupRecyclerView()
         observeProductList()
-        observeSearchBar()
     }
 
     private fun initViews() {
         binding.searchBar.editTextChangeListener(object : SearchBar.EditTextChangeListener {
             override fun onTextChangeListener(text: String) {
-                productAdapter.filter.filter(text)
+                if (text.isNotEmpty())
+                    productAdapter.filter.filter(text)
             }
         })
     }
@@ -52,7 +54,11 @@ class ProductsFragment : BaseFragment<FragmentProductsBinding>() {
     private fun setupRecyclerView() {
         productAdapter = ProductAdapter(object : ProductAdapter.ProductSelectListener {
             override fun onItemClick(product: ProductItem) {
-                showToast("${product.name} Clicked")
+                val action =
+                    ProductsFragmentDirections.actionProductsFragmentToProductDetailFragment(
+                        productId = product.id
+                    )
+                findNavController().navigate(action)
             }
 
         })
@@ -79,17 +85,18 @@ class ProductsFragment : BaseFragment<FragmentProductsBinding>() {
     private fun observeProductList() {
         launchAndRepeatWithViewLifecycle {
             launch {
-                viewModel.productResponse.collect {
+                viewModel.productListResponse.collect {
                     when (it) {
                         is Resource.Success -> {
                             binding.shimmerFrameLayout.isVisible = false
                             binding.progressBar.isVisible = false
                             binding.rvProducts.isVisible = true
                             productAdapter.setProductList(it.value)
+                            Log.d("observeProductList", "observeProductList: " + it.toString())
                         }
 
                         is Resource.Loading -> {
-                            binding.shimmerFrameLayout.isVisible = false
+                            binding.shimmerFrameLayout.isVisible = true
                             binding.progressBar.isVisible = true
                             binding.rvProducts.isVisible = false
                         }
@@ -101,12 +108,12 @@ class ProductsFragment : BaseFragment<FragmentProductsBinding>() {
         }
     }
 
+    override fun onPause() {
+        super.onPause()
+        clearSearchBar()
+    }
 
-    private fun observeSearchBar() {
-        launchAndRepeatWithViewLifecycle {
-            launch {
-
-            }
-        }
+    private fun clearSearchBar() {
+        binding.searchBar.clearEditText()
     }
 }
