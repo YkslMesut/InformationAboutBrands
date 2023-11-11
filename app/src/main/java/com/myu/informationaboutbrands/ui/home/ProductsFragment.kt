@@ -39,7 +39,6 @@ class ProductsFragment : BaseFragment<FragmentProductsBinding>() {
         initViews()
         setupRecyclerView()
         observeProductList()
-        observeSearchBar()
     }
 
     private fun initViews() {
@@ -109,12 +108,12 @@ class ProductsFragment : BaseFragment<FragmentProductsBinding>() {
         }
     }
 
+    override fun onPause() {
+        super.onPause()
+        clearSearchBar()
+    }
 
-    private fun observeSearchBar() {
-        launchAndRepeatWithViewLifecycle {
-            launch {
-
-            }
-        }
+    private fun clearSearchBar() {
+        binding.searchBar.clearEditText()
     }
 }
