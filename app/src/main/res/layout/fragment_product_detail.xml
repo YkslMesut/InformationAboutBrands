@@ -70,6 +70,16 @@
             tools:text="Outbrain'in CEO'su Yaron Galai, IDF'nin masum Filistinlilere karşı eylemini destekleyen sadık bir Siyonisttir." />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
+    <ImageView
+        android:id="@+id/imageBack"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/margin_medium"
+        android:elevation="1dp"
+        android:src="@drawable/ic_left_arrow"
+        app:layout_constraintStart_toStartOf="@+id/guidelineStart"
+        app:layout_constraintTop_toTopOf="@+id/guidelineTop" />
+
     <ProgressBar
         android:id="@+id/progressBar"
         android:layout_width="75dp"
