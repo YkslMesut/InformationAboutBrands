@@ -1,60 +1,75 @@
 package com.myu.informationaboutbrands.ui.home
 
+import android.annotation.SuppressLint
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.Fragment
-import com.myu.informationaboutbrands.R
+import android.webkit.WebViewClient
+import androidx.core.view.isVisible
+import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.navArgs
+import coil.load
+import coil.transform.CircleCropTransformation
+import com.myu.informationaboutbrands.data.repository.Resource
+import com.myu.informationaboutbrands.databinding.FragmentProductDetailBinding
+import com.myu.informationaboutbrands.ui.BaseFragment
+import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
+@AndroidEntryPoint
+class ProductDetailFragment : BaseFragment<FragmentProductDetailBinding>() {
 
-/**
- * A simple [Fragment] subclass.
- * Use the [ProductDetailFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
-class ProductDetailFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
+    private val viewModel: ProductDetailViewModel by viewModels()
+    private val args: ProductDetailFragmentArgs by navArgs()
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
+    override fun getViewBinding(container: ViewGroup?) =
+        FragmentProductDetailBinding.inflate(layoutInflater, container, false)
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        observeProductData()
+        viewModel.getProductItemList(productId = args.productId)
+    }
+
+    private fun observeProductData() {
+        launchAndRepeatWithViewLifecycle {
+            launch {
+                viewModel.productResponse.collect {
+                    when (it) {
+                        is Resource.Success -> {
+                            val item = it.value
+                            binding.shimmerFrameLayout.isVisible = false
+                            binding.progressBar.isVisible = false
+                            binding.containerItemInfo.isVisible = true
+
+                            createWebView(item.source)
+                            binding.imageProduct.load(item.logo) {
+                                transformations(CircleCropTransformation())
+                            }
+                            binding.txtProductTitle.text = item.name
+                            binding.txtProductDescription.text = item.description
+                            binding.txtProductInfoReason.text = item.reason
+                        }
+
+                        is Resource.Loading -> {
+                            binding.shimmerFrameLayout.isVisible = true
+                            binding.progressBar.isVisible = true
+                            binding.containerItemInfo.isVisible = false
+                        }
+
+                        else -> {}
+                    }
+                }
+            }
         }
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_product_detail, container, false)
-    }
-
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment ProductDetailFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            ProductDetailFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                }
-            }
+    @SuppressLint("SetJavaScriptEnabled")
+    private fun createWebView(url: String) {
+        binding.webViewSource.webViewClient = WebViewClient()
+        binding.webViewSource.loadUrl(url)
+        binding.webViewSource.settings.javaScriptEnabled = true
+        binding.webViewSource.settings.setSupportZoom(true)
     }
 }

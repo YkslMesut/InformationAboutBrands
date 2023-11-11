@@ -43,5 +43,17 @@ class ProductInfoRepository @Inject constructor(
         }
     }
 
+    fun getProductDetail(id: String): Flow<Resource<ProductItem>> {
+        return flow {
+            emit(Resource.Loading)
 
+            val isLanguageTr = Locale.getDefault().language == LANGUAGE_TR
+            val preferenceStorageProductList =
+                if (isLanguageTr) preferenceStorage.productListTr.firstOrNull() else preferenceStorage.productList.firstOrNull()
+
+            val productItem = preferenceStorageProductList?.find { it.id == id }
+            emit(Resource.Success(value = productItem!!))
+
+        }
+    }
 }

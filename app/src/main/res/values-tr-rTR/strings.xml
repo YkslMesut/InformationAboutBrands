@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Markalar&amp;Detayları</string>
+    <string name="search">Ara</string>
+    <string name="detail">Detay</string>
+    <string name="product_info_reason">"Sebep: "</string>
+</resources>

@@ -12,22 +12,18 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class ProductViewModel @Inject constructor(
+class ProductDetailViewModel @Inject constructor(
     private val productInfoRepository: ProductInfoRepository
 ) : ViewModel() {
 
-    private val _productListResponse = MutableStateFlow<Resource<List<ProductItem>>>(Resource.Empty)
-    val productListResponse: StateFlow<Resource<List<ProductItem>>>
-        get() = _productListResponse
+    private val _productResponse = MutableStateFlow<Resource<ProductItem>>(Resource.Empty)
+    val productResponse: StateFlow<Resource<ProductItem>>
+        get() = _productResponse
 
 
-    init {
-        getProductItemList()
-    }
-
-    private fun getProductItemList() = viewModelScope.launch {
-        productInfoRepository.getProductList().collect { resource ->
-            _productListResponse.value = resource
+    fun getProductItemList(productId: String) = viewModelScope.launch {
+        productInfoRepository.getProductDetail(id = productId).collect { resource ->
+            _productResponse.value = resource
         }
     }
 }
