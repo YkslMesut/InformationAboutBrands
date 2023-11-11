@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.webkit.WebViewClient
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import coil.load
 import coil.transform.CircleCropTransformation
@@ -28,8 +29,15 @@ class ProductDetailFragment : BaseFragment<FragmentProductDetailBinding>() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        initViews()
         observeProductData()
         viewModel.getProductItemList(productId = args.productId)
+    }
+
+    private fun initViews() {
+        binding.imageBack.setOnClickListener {
+            findNavController().navigateUp()
+        }
     }
 
     private fun observeProductData() {

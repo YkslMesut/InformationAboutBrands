@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.motion.widget.MotionLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    app:layoutDescription="@xml/fragment_product_detail_scene"
     tools:context=".ui.home.ProductDetailFragment">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/containerItemInfo"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:visibility="gone"
         app:layout_constraintEnd_toStartOf="@+id/guidelineEnd"
         app:layout_constraintStart_toStartOf="@+id/guidelineStart"
         app:layout_constraintTop_toTopOf="@+id/guidelineTop"
@@ -69,6 +69,16 @@
             app:layout_constraintTop_toBottomOf="@+id/txtProductDescription"
             tools:text="Outbrain'in CEO'su Yaron Galai, IDF'nin masum Filistinlilere karşı eylemini destekleyen sadık bir Siyonisttir." />
     </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <ImageView
+        android:id="@+id/imageBack"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/margin_medium"
+        android:elevation="1dp"
+        android:src="@drawable/ic_left_arrow"
+        app:layout_constraintStart_toStartOf="@+id/guidelineStart"
+        app:layout_constraintTop_toTopOf="@+id/guidelineTop" />
 
     <ProgressBar
         android:id="@+id/progressBar"
@@ -139,4 +149,4 @@
         app:layout_constraintGuide_end="@dimen/margin_medium" />
 
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.constraintlayout.motion.widget.MotionLayout>
